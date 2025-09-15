@@ -1,0 +1,452 @@
+{
+  "authentication": {
+    "base_url": "/api/v1/auth",
+    "endpoints": [
+      {
+        "method": "POST",
+        "path": "/login",
+        "description": "User login",
+        "request_body": {
+          "username": "string",
+          "password": "string"
+        },
+        "response": {
+          "token": "string",
+          "user": "object",
+          "permissions": "array"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/logout",
+        "description": "User logout",
+        "headers": {
+          "Authorization": "Bearer {token}"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/forgot-password",
+        "description": "Request password reset",
+        "request_body": {
+          "email": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/reset-password",
+        "description": "Reset password with token",
+        "request_body": {
+          "token": "string",
+          "new_password": "string"
+        }
+      }
+    ]
+  },
+  "user_management": {
+    "base_url": "/api/v1/users",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all users with pagination",
+        "query_params": {
+          "page": "number",
+          "limit": "number",
+          "role": "string",
+          "search": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Create new user",
+        "request_body": {
+          "username": "string",
+          "email": "string",
+          "password": "string",
+          "first_name": "string",
+          "last_name": "string",
+          "role": "string"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/{user_id}",
+        "description": "Get user by ID"
+      },
+      {
+        "method": "PUT",
+        "path": "/{user_id}",
+        "description": "Update user information"
+      },
+      {
+        "method": "DELETE",
+        "path": "/{user_id}",
+        "description": "Delete user"
+      },
+      {
+        "method": "PUT",
+        "path": "/{user_id}/role",
+        "description": "Update user role",
+        "request_body": {
+          "role": "string",
+          "permissions": "array"
+        }
+      }
+    ]
+  },
+  "student_management": {
+    "base_url": "/api/v1/students",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all students",
+        "query_params": {
+          "class_id": "string",
+          "academic_year": "string",
+          "search": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Add new student",
+        "request_body": {
+          "user_data": "object",
+          "admission_number": "string",
+          "class_id": "string",
+          "parent_id": "string"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/{student_id}",
+        "description": "Get student details"
+      },
+      {
+        "method": "GET",
+        "path": "/{student_id}/attendance",
+        "description": "Get student attendance records"
+      },
+      {
+        "method": "GET",
+        "path": "/{student_id}/grades",
+        "description": "Get student grades and results"
+      },
+      {
+        "method": "GET",
+        "path": "/{student_id}/fee-status",
+        "description": "Get student fee payment status"
+      }
+    ]
+  },
+  "teacher_management": {
+    "base_url": "/api/v1/teachers",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all teachers"
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Add new teacher"
+      },
+      {
+        "method": "GET",
+        "path": "/{teacher_id}/schedule",
+        "description": "Get teacher's class schedule"
+      },
+      {
+        "method": "GET",
+        "path": "/{teacher_id}/classes",
+        "description": "Get classes assigned to teacher"
+      },
+      {
+        "method": "POST",
+        "path": "/{teacher_id}/attendance",
+        "description": "Mark teacher attendance"
+      },
+      {
+        "method": "GET",
+        "path": "/{teacher_id}/leave-balance",
+        "description": "Get teacher's leave balance"
+      }
+    ]
+  },
+  "class_management": {
+    "base_url": "/api/v1/classes",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all classes"
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Create new class"
+      },
+      {
+        "method": "GET",
+        "path": "/{class_id}/students",
+        "description": "Get students in a class"
+      },
+      {
+        "method": "GET",
+        "path": "/{class_id}/subjects",
+        "description": "Get subjects for a class"
+      },
+      {
+        "method": "GET",
+        "path": "/{class_id}/timetable",
+        "description": "Get class timetable"
+      },
+      {
+        "method": "POST",
+        "path": "/{class_id}/attendance",
+        "description": "Mark class attendance",
+        "request_body": {
+          "date": "string",
+          "attendance_records": "array"
+        }
+      }
+    ]
+  },
+  "examination_management": {
+    "base_url": "/api/v1/examinations",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get all examinations"
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Create new examination"
+      },
+      {
+        "method": "GET",
+        "path": "/{exam_id}/schedule",
+        "description": "Get exam schedule"
+      },
+      {
+        "method": "POST",
+        "path": "/{exam_id}/schedule",
+        "description": "Create exam schedule"
+      },
+      {
+        "method": "POST",
+        "path": "/{exam_id}/results",
+        "description": "Enter exam results",
+        "request_body": {
+          "student_id": "string",
+          "subject_id": "string",
+          "marks_obtained": "number"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/{exam_id}/results",
+        "description": "Get exam results"
+      },
+      {
+        "method": "GET",
+        "path": "/{exam_id}/admit-cards",
+        "description": "Generate admit cards for exam"
+      },
+      {
+        "method": "GET",
+        "path": "/{exam_id}/mark-sheets",
+        "description": "Generate mark sheets for exam"
+      }
+    ]
+  },
+  "attendance_management": {
+    "base_url": "/api/v1/attendance",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/students",
+        "description": "Get student attendance",
+        "query_params": {
+          "student_id": "string",
+          "class_id": "string",
+          "date_from": "string",
+          "date_to": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/students",
+        "description": "Mark student attendance"
+      },
+      {
+        "method": "GET",
+        "path": "/teachers",
+        "description": "Get teacher attendance"
+      },
+      {
+        "method": "POST",
+        "path": "/teachers",
+        "description": "Mark teacher attendance"
+      },
+      {
+        "method": "GET",
+        "path": "/reports",
+        "description": "Generate attendance reports"
+      }
+    ]
+  },
+  "fee_management": {
+    "base_url": "/api/v1/fees",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get fee structure"
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Create fee structure"
+      },
+      {
+        "method": "GET",
+        "path": "/payments",
+        "description": "Get fee payments",
+        "query_params": {
+          "student_id": "string",
+          "status": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/payments",
+        "description": "Record fee payment"
+      },
+      {
+        "method": "GET",
+        "path": "/defaulters",
+        "description": "Get fee defaulters list"
+      },
+      {
+        "method": "GET",
+        "path": "/receipts/{payment_id}",
+        "description": "Generate fee receipt"
+      }
+    ]
+  },
+  "announcements": {
+    "base_url": "/api/v1/announcements",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get announcements",
+        "query_params": {
+          "target_audience": "string",
+          "active_only": "boolean"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/",
+        "description": "Create announcement"
+      },
+      {
+        "method": "PUT",
+        "path": "/{announcement_id}",
+        "description": "Update announcement"
+      },
+      {
+        "method": "DELETE",
+        "path": "/{announcement_id}",
+        "description": "Delete announcement"
+      }
+    ]
+  },
+  "leave_management": {
+    "base_url": "/api/v1/leave",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/applications",
+        "description": "Get leave applications",
+        "query_params": {
+          "user_id": "string",
+          "status": "string"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/applications",
+        "description": "Submit leave application"
+      },
+      {
+        "method": "PUT",
+        "path": "/applications/{leave_id}/approve",
+        "description": "Approve leave application"
+      },
+      {
+        "method": "PUT",
+        "path": "/applications/{leave_id}/reject",
+        "description": "Reject leave application"
+      },
+      {
+        "method": "GET",
+        "path": "/balance/{user_id}",
+        "description": "Get leave balance for user"
+      }
+    ]
+  },
+  "reports": {
+    "base_url": "/api/v1/reports",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/attendance",
+        "description": "Generate attendance report"
+      },
+      {
+        "method": "GET",
+        "path": "/academic",
+        "description": "Generate academic performance report"
+      },
+      {
+        "method": "GET",
+        "path": "/financial",
+        "description": "Generate financial report"
+      },
+      {
+        "method": "GET",
+        "path": "/student-progress",
+        "description": "Generate student progress report"
+      }
+    ]
+  },
+  "notifications": {
+    "base_url": "/api/v1/notifications",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/",
+        "description": "Get user notifications"
+      },
+      {
+        "method": "PUT",
+        "path": "/{notification_id}/read",
+        "description": "Mark notification as read"
+      },
+      {
+        "method": "POST",
+        "path": "/send",
+        "description": "Send notification to users"
+      }
+    ]
+  }
+}

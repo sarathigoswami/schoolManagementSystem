@@ -1,0 +1,270 @@
+{
+  "users": {
+    "user_id": "UUID PRIMARY KEY",
+    "username": "VARCHAR(50) UNIQUE",
+    "email": "VARCHAR(100) UNIQUE",
+    "password_hash": "VARCHAR(255)",
+    "first_name": "VARCHAR(50)",
+    "last_name": "VARCHAR(50)",
+    "phone": "VARCHAR(20)",
+    "address": "TEXT",
+    "date_of_birth": "DATE",
+    "gender": "ENUM('Male', 'Female', 'Other')",
+    "profile_picture": "VARCHAR(255)",
+    "is_active": "BOOLEAN DEFAULT TRUE",
+    "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "updated_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"
+  },
+  "user_roles": {
+    "role_id": "UUID PRIMARY KEY",
+    "user_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "role_type": "ENUM('admin', 'principal', 'vice_principal', 'teacher', 'student', 'parent', 'accountant', 'librarian')",
+    "permissions": "JSON",
+    "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+  },
+  "schools": {
+    "school_id": "UUID PRIMARY KEY",
+    "school_name": "VARCHAR(100)",
+    "school_code": "VARCHAR(20) UNIQUE",
+    "address": "TEXT",
+    "phone": "VARCHAR(20)",
+    "email": "VARCHAR(100)",
+    "website": "VARCHAR(100)",
+    "principal_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "vice_principal_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "established_date": "DATE",
+    "logo": "VARCHAR(255)",
+    "is_active": "BOOLEAN DEFAULT TRUE"
+  },
+  "academic_years": {
+    "academic_year_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "year_name": "VARCHAR(20)",
+    "start_date": "DATE",
+    "end_date": "DATE",
+    "is_current": "BOOLEAN DEFAULT FALSE"
+  },
+  "classes": {
+    "class_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "class_name": "VARCHAR(50)",
+    "class_level": "INT",
+    "section": "VARCHAR(10)",
+    "capacity": "INT",
+    "class_teacher_id": "UUID FOREIGN KEY REFERENCES users(user_id)"
+  },
+  "subjects": {
+    "subject_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "subject_name": "VARCHAR(100)",
+    "subject_code": "VARCHAR(20)",
+    "description": "TEXT",
+    "is_mandatory": "BOOLEAN DEFAULT TRUE"
+  },
+  "class_subjects": {
+    "class_subject_id": "UUID PRIMARY KEY",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id)",
+    "subject_id": "UUID FOREIGN KEY REFERENCES subjects(subject_id)",
+    "teacher_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "academic_year_id": "UUID FOREIGN KEY REFERENCES academic_years(academic_year_id)"
+  },
+  "students": {
+    "student_id": "UUID PRIMARY KEY",
+    "user_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "admission_number": "VARCHAR(50) UNIQUE",
+    "roll_number": "VARCHAR(20)",
+    "admission_date": "DATE",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id)",
+    "parent_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "guardian_name": "VARCHAR(100)",
+    "guardian_phone": "VARCHAR(20)",
+    "guardian_email": "VARCHAR(100)",
+    "blood_group": "VARCHAR(5)",
+    "medical_conditions": "TEXT",
+    "transport_required": "BOOLEAN DEFAULT FALSE"
+  },
+  "teachers": {
+    "teacher_id": "UUID PRIMARY KEY",
+    "user_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "employee_id": "VARCHAR(50) UNIQUE",
+    "joining_date": "DATE",
+    "qualification": "VARCHAR(200)",
+    "experience_years": "INT",
+    "salary": "DECIMAL(10,2)",
+    "department": "VARCHAR(100)",
+    "specialization": "VARCHAR(100)",
+    "is_class_teacher": "BOOLEAN DEFAULT FALSE"
+  },
+  "attendance": {
+    "attendance_id": "UUID PRIMARY KEY",
+    "student_id": "UUID FOREIGN KEY REFERENCES students(student_id)",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id)",
+    "date": "DATE",
+    "status": "ENUM('present', 'absent', 'late', 'half_day')",
+    "marked_by": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "marked_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "remarks": "TEXT"
+  },
+  "teacher_attendance": {
+    "attendance_id": "UUID PRIMARY KEY",
+    "teacher_id": "UUID FOREIGN KEY REFERENCES teachers(teacher_id)",
+    "date": "DATE",
+    "status": "ENUM('present', 'absent', 'late', 'half_day')",
+    "marked_by": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "marked_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+  },
+  "timetable": {
+    "timetable_id": "UUID PRIMARY KEY",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id)",
+    "subject_id": "UUID FOREIGN KEY REFERENCES subjects(subject_id)",
+    "teacher_id": "UUID FOREIGN KEY REFERENCES teachers(teacher_id)",
+    "day_of_week": "ENUM('Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday')",
+    "start_time": "TIME",
+    "end_time": "TIME",
+    "room_number": "VARCHAR(20)",
+    "academic_year_id": "UUID FOREIGN KEY REFERENCES academic_years(academic_year_id)"
+  },
+  "examinations": {
+    "exam_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "exam_name": "VARCHAR(100)",
+    "exam_type": "ENUM('unit_test', 'mid_term', 'final', 'annual')",
+    "academic_year_id": "UUID FOREIGN KEY REFERENCES academic_years(academic_year_id)",
+    "start_date": "DATE",
+    "end_date": "DATE",
+    "created_by": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "is_published": "BOOLEAN DEFAULT FALSE"
+  },
+  "exam_schedule": {
+    "schedule_id": "UUID PRIMARY KEY",
+    "exam_id": "UUID FOREIGN KEY REFERENCES examinations(exam_id)",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id)",
+    "subject_id": "UUID FOREIGN KEY REFERENCES subjects(subject_id)",
+    "exam_date": "DATE",
+    "start_time": "TIME",
+    "end_time": "TIME",
+    "room_number": "VARCHAR(20)",
+    "max_marks": "INT",
+    "min_passing_marks": "INT"
+  },
+  "exam_results": {
+    "result_id": "UUID PRIMARY KEY",
+    "student_id": "UUID FOREIGN KEY REFERENCES students(student_id)",
+    "exam_id": "UUID FOREIGN KEY REFERENCES examinations(exam_id)",
+    "subject_id": "UUID FOREIGN KEY REFERENCES subjects(subject_id)",
+    "marks_obtained": "DECIMAL(5,2)",
+    "max_marks": "INT",
+    "grade": "VARCHAR(5)",
+    "remarks": "TEXT",
+    "entered_by": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "entered_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+  },
+  "admit_cards": {
+    "admit_card_id": "UUID PRIMARY KEY",
+    "student_id": "UUID FOREIGN KEY REFERENCES students(student_id)",
+    "exam_id": "UUID FOREIGN KEY REFERENCES examinations(exam_id)",
+    "generated_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "file_path": "VARCHAR(255)"
+  },
+  "mark_sheets": {
+    "mark_sheet_id": "UUID PRIMARY KEY",
+    "student_id": "UUID FOREIGN KEY REFERENCES students(student_id)",
+    "exam_id": "UUID FOREIGN KEY REFERENCES examinations(exam_id)",
+    "total_marks": "DECIMAL(8,2)",
+    "percentage": "DECIMAL(5,2)",
+    "grade": "VARCHAR(5)",
+    "rank": "INT",
+    "generated_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "file_path": "VARCHAR(255)"
+  },
+  "fees": {
+    "fee_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "fee_type": "VARCHAR(50)",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id)",
+    "amount": "DECIMAL(10,2)",
+    "academic_year_id": "UUID FOREIGN KEY REFERENCES academic_years(academic_year_id)",
+    "due_date": "DATE"
+  },
+  "fee_payments": {
+    "payment_id": "UUID PRIMARY KEY",
+    "student_id": "UUID FOREIGN KEY REFERENCES students(student_id)",
+    "fee_id": "UUID FOREIGN KEY REFERENCES fees(fee_id)",
+    "amount_paid": "DECIMAL(10,2)",
+    "payment_date": "DATE",
+    "payment_method": "ENUM('cash', 'cheque', 'online', 'card')",
+    "transaction_id": "VARCHAR(100)",
+    "receipt_number": "VARCHAR(50)",
+    "status": "ENUM('pending', 'completed', 'failed')"
+  },
+  "announcements": {
+    "announcement_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "title": "VARCHAR(200)",
+    "content": "TEXT",
+    "target_audience": "ENUM('all', 'students', 'teachers', 'parents', 'specific_class')",
+    "class_id": "UUID FOREIGN KEY REFERENCES classes(class_id) NULL",
+    "created_by": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "is_active": "BOOLEAN DEFAULT TRUE",
+    "priority": "ENUM('low', 'medium', 'high')"
+  },
+  "leave_applications": {
+    "leave_id": "UUID PRIMARY KEY",
+    "user_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "leave_type": "ENUM('sick', 'casual', 'maternity', 'emergency')",
+    "start_date": "DATE",
+    "end_date": "DATE",
+    "reason": "TEXT",
+    "status": "ENUM('pending', 'approved', 'rejected')",
+    "applied_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP",
+    "approved_by": "UUID FOREIGN KEY REFERENCES users(user_id) NULL",
+    "approved_at": "TIMESTAMP NULL",
+    "comments": "TEXT"
+  },
+  "library_books": {
+    "book_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "title": "VARCHAR(200)",
+    "author": "VARCHAR(100)",
+    "isbn": "VARCHAR(20) UNIQUE",
+    "category": "VARCHAR(50)",
+    "publisher": "VARCHAR(100)",
+    "publication_year": "INT",
+    "total_copies": "INT",
+    "available_copies": "INT"
+  },
+  "book_issues": {
+    "issue_id": "UUID PRIMARY KEY",
+    "book_id": "UUID FOREIGN KEY REFERENCES library_books(book_id)",
+    "student_id": "UUID FOREIGN KEY REFERENCES students(student_id)",
+    "issue_date": "DATE",
+    "due_date": "DATE",
+    "return_date": "DATE NULL",
+    "fine_amount": "DECIMAL(8,2) DEFAULT 0",
+    "status": "ENUM('issued', 'returned', 'overdue')"
+  },
+  "events": {
+    "event_id": "UUID PRIMARY KEY",
+    "school_id": "UUID FOREIGN KEY REFERENCES schools(school_id)",
+    "event_name": "VARCHAR(200)",
+    "description": "TEXT",
+    "event_date": "DATE",
+    "start_time": "TIME",
+    "end_time": "TIME",
+    "venue": "VARCHAR(100)",
+    "event_type": "ENUM('academic', 'sports', 'cultural', 'meeting')",
+    "created_by": "UUID FOREIGN KEY REFERENCES users(user_id)"
+  },
+  "notifications": {
+    "notification_id": "UUID PRIMARY KEY",
+    "user_id": "UUID FOREIGN KEY REFERENCES users(user_id)",
+    "title": "VARCHAR(200)",
+    "message": "TEXT",
+    "type": "ENUM('announcement', 'exam', 'fee', 'attendance', 'leave')",
+    "is_read": "BOOLEAN DEFAULT FALSE",
+    "created_at": "TIMESTAMP DEFAULT CURRENT_TIMESTAMP"
+  }
+}
