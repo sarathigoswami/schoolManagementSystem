@@ -1,0 +1,25 @@
+spring:
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: validate
+
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+server:
+  port: ${SERVER_PORT:8081}
+
+logging:
+  level:
+    com.schoolmanagement.usermanagement: WARN
+    org.springframework.security: ERROR
+    org.hibernate.SQL: ERROR
+
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600000} # 1 hour in production
+  refresh-expiration: ${JWT_REFRESH_EXPIRATION:86400000} # 1 day in production

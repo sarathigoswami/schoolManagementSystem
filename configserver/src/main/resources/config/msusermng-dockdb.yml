@@ -1,0 +1,46 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/schoolmanagement
+    username: postgres
+    password: root
+  jpa: 
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 60000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-wait: -1ms
+          max-idle: 8
+          min-idle: 0
+
+logging:
+  level:
+    org:
+      hibernate:
+        sql: DEBUG
+
+build:
+  version: "1.0"
+
+accounts:
+  message: "Welcome to SchoolMS - User Management related docker database APIs "
+  contactDetails:
+    name: "Developer Team 1"
+    email: "{cipher}39415ea0caaf781dd65c77ffe4e5370ded25ad49cc7e5b43885e42a9738d3ab8"
+  onCallSupport:
+    - (012)345-6789
+    - (012)345-6789

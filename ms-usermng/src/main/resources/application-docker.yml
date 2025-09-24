@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:user-management-db}:${DB_PORT:5432}/${DB_NAME:user_management_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:password}
+
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.schoolmanagement.usermanagement: INFO
+    org.springframework.security: WARN
